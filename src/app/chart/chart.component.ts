@@ -171,17 +171,7 @@ export class ChartComponent implements OnInit {
 
   ngOnInit() {
 
-    // DARK MODE STUFF
-  // 
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-      this.darkMode = prefersDark.matches;
-
-      prefersDark.addEventListener('change', (event) => {
-        this.darkMode = event.matches;
-      });
-
-
-    // END OF DARK MODE STUFF
+    this.darkMode = false;
 
 
     this.getSessionList();
