@@ -18,7 +18,7 @@ export class CrsgetterService {
   localMode = false;
 
   session = "20229";
-  crsPath = this.localMode ? "api/" : "https://raw.githubusercontent.com/ICPRplshelp/Enrollment-Data/master/";
+  crsPath = this.localMode ? "api/" : "https://raw.githubusercontent.com/kayarecepomer/data-for-enrol/master/";
   suffix = ".json";
   
 
