@@ -1,177 +1,179 @@
+// ── Layout ────────────────────────────────────────────────────────────────────
 
-// @use '@angular/material' as mat;
-
-// @include mat.core();
-
-// $light-theme: mat.define-light-theme((
-//   color: (
-//     primary: mat.define-palette(mat.$indigo-palette),
-//     accent: mat.define-palette(mat.$pink-palette, A200, A100, A400),
-//   )
-// ));
-
-// $dark-theme: mat.define-dark-theme((
-//   color: (
-//     primary: mat.define-palette(mat.$indigo-palette),
-//     accent: mat.define-palette(mat.$pink-palette, A200, A100, A400),
-//   )
-// ));
-
-// @include mat.all-component-themes($light-theme);
-
-// .dark-mode {
-//   @include mat.all-component-colors($dark-theme);
-//   background-color: #020202;
-//   color: #ddd;
-// }
-
-
-.force-text-white {
-  color: white !important;
-}
-.mat-form-field-label {
-  color: white !important;
+.tracker-root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
 }
 
+// ── Header ────────────────────────────────────────────────────────────────────
 
-::ng-deep .dark-mode .mat-select-value {
-  color: white;
-}
-
-::ng-deep .dark-mode .mat-form-field-label {
-  color: white;
-}
-
-.dark-mode a {
-  color: rgb(169, 254, 240) ; /* or any color you want */
-}
-.dark-mode a:active {
-  color: rgb(123, 209, 194) ; /* or any color you want */
-}
-.dark-mode a:visited {
-  color: rgb(169, 230, 254) !important; /* or any color you want */
-}
-
-
-
-.chRegion {
-  padding-left: 0.25em;
-  padding-right: 0.25em;
-
-  @media (min-width: 700px) {
-    padding-left: calc((100vw - 700px) * 0.2);
-    padding-right: calc((100vw - 700px) * 0.2);
-  }
-
-  max-width: 1200px;
-  padding-bottom: 100px;
-  margin: auto;
-}
-
-.crstitle {
+.tracker-header {
   text-align: center;
-  padding-bottom: 5px;
+  padding: 40px 0 24px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 28px;
 }
 
-
-.thick-row {
-  padding-right: 5px;
+.tracker-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
 }
 
+.tracker-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
 
-.center {
+.last-updated {
+  color: #999;
+  font-size: 13px;
+  display: block;
+  margin-top: 4px;
+}
+
+// ── Search bar ────────────────────────────────────────────────────────────────
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-field {
+  margin: 0;
+}
+
+.session-field {
+  width: 220px;
+}
+
+.course-field {
+  width: 200px;
+}
+
+.search-btn {
+  height: 56px;
+  padding: 0 28px;
+  font-size: 15px;
+  font-weight: 600;
+  background-color: #1a73e8 !important;
+  color: white !important;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+// ── Error ─────────────────────────────────────────────────────────────────────
+
+.error-banner {
+  background: #fdecea;
+  color: #c62828;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 10px 16px;
   text-align: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 5px;
+  max-width: 500px;
+  margin: 0 auto 16px;
+  font-size: 14px;
 }
 
-.slight-pad {
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+// ── Results ───────────────────────────────────────────────────────────────────
+
+.results-region {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px;
 }
 
-.slight-more-pad {
-  padding-left: 1.0em;
-  padding-right: 1.0em;
+.course-title-block {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.canvas-holder {
-  // width: 100vw;
-  height: max(300px, calc(100vw * 0.75));
-  max-width: 1200px;
-  max-height: max(400px, min(60vh, calc(1200px * 0.75)));
-  // width: 120vh;
-  // width: min(120vh, 100%);
+.course-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 
-
-.center-me {
-  margin: auto;
+.course-code {
+  font-size: 14px;
+  color: #888;
+  margin-top: 2px;
 }
 
-.flexit01 {
+// ── Chart ─────────────────────────────────────────────────────────────────────
+
+.chart-wrapper {
+  height: max(280px, calc(100vw * 0.4));
+  max-height: 480px;
+  margin-bottom: 24px;
+}
+
+// ── Stats cards ───────────────────────────────────────────────────────────────
+
+.stats-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  align-content: space-between;
-  align-items: center;
-
   justify-content: center;
+  margin-bottom: 24px;
 }
 
-
-.red {
+.stat-card {
+  background: #f5f6f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 20px;
   text-align: center;
-  background-color: #f58e84;
-  color: #ffffff;
-  border-radius: 5px;
-  padding: 10px;
-  background-position: center;
-  background-size: 100% 100%;
+  min-width: 100px;
 }
 
-
-
-.flexit02 {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-content: space-between;
-  align-items: center;
-  justify-content: center;
+.stat-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
 }
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.stat-cap {
+  font-size: 14px;
+  color: #aaa;
+  font-weight: 400;
+}
+
+.stat-pct {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+}
+
+// ── Accordions ────────────────────────────────────────────────────────────────
+
+.accordions-region {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+// ── Misc ──────────────────────────────────────────────────────────────────────
 
 td {
   text-align: left;
-  width: 50px;
   white-space: nowrap;
-}
-
-
-.center4 {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-content: space-between;
-  align-items: center;
-  justify-content: center;
-}
-
-.shake {
-  animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-
-.flexit03 {
-  padding: 0px min(20px, 20%);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 15px;
-  align-content: space-between;
-  align-items: center;
-  justify-content: center;
 }

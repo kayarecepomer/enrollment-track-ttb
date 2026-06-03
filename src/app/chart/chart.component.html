@@ -1,269 +1,117 @@
-<div [ngClass]="{'dark-mode': false}">
+<div class="tracker-root">
 
-
-  <div class="center" style="padding-top: 30px">
-
-    <h1 style="font-size: 35px">
-      <strong>
-        UofT Timetable Tracker </strong>
-    </h1>
-
-    <p> Track the enrollment for any course
-      offered recently. Last updated: {{ lastUpdateString }}
+  <!-- ── Header ─────────────────────────────────────── -->
+  <div class="tracker-header">
+    <h1 class="tracker-title">UofT Course Tracker</h1>
+    <p class="tracker-subtitle">
+      Search any course to see enrollment over time.
+      <span *ngIf="lastUpdateString" class="last-updated">Last updated: {{ lastUpdateString }}</span>
     </p>
-
-  </div>
-  <div class="center">
-
-    <div class="flexit01">
-      <div *ngIf="getSessions().length >= 2">
-        <mat-form-field class="example-form-field" appearance="fill" (keydown)="keyDownFunction($event)">
-          <mat-label>Session</mat-label>
-
-          <mat-select [(ngModel)]="selectedValue" name="sess">
-            <mat-option *ngFor="let ses of getSessions()" [value]="ses.sessionCode">
-
-              {{ses.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-
-
-
-      <div>
-        <mat-form-field class="example-form-field" appearance="fill" (keydown)="keyDownFunction($event)">
-          <mat-label>Course code</mat-label>
-
-          <input matInput type="text" [(ngModel)]="inputCourse">
-        </mat-form-field>
-      </div>
-
-      <button id="reloadit" type="button" mat-stroked-button (click)="
-loadCourseData(inputCourse)
-">RELOAD IT</button>
-
-    </div>
-
-
-    <!--  showRemaining -->
-
-    <div class="flexit03" style="padding-bottom: 5px">
-      <mat-checkbox [(ngModel)]="showMaxEnrollment" color="primary"
-        matTooltip="Determines whether maximum enrollment lines should be visible" [matTooltipPosition]="'below'"
-        matTooltipShowDelay="700">
-        Max
-      </mat-checkbox>
-      <mat-checkbox [(ngModel)]="autoFormat" color="primary"
-        matTooltip="Input course codes will be formatted when a search is done. Use this for screenshots."
-        [matTooltipPosition]="'below'" matTooltipShowDelay="700">
-        Autoformat
-      </mat-checkbox>
-      <mat-checkbox [(ngModel)]="showAnnotations" color="primary"
-        matTooltip="Display vertical lines showing important dates" [matTooltipPosition]="'below'"
-        matTooltipShowDelay="700">
-        Annotations
-      </mat-checkbox>
-
-      <mat-checkbox [(ngModel)]="hideSpecial" color="primary"
-        matTooltip="Prevents LEC2000-LEC2999 sections from showing" [matTooltipPosition]="'below'"
-        matTooltipShowDelay="700">
-        Hide special
-      </mat-checkbox>
-
-      <!-- showLargePoints -->
-
-      <mat-checkbox [(ngModel)]="combineAll" color="primary"
-        matTooltip="Combine all lecture sections normally visible on the graph into one" [matTooltipPosition]="'below'"
-        matTooltipShowDelay="700">
-        Combine all
-      </mat-checkbox>
-      <mat-checkbox [(ngModel)]="showRemaining" color="primary"
-        matTooltip="Combines enrollment across all sections, without counting waitlisted students. If all enrollment sections are capped, the quantity of the smallest waitlist will overshoot the cap."
-        [matTooltipPosition]="'below'" matTooltipShowDelay="700">
-        Show leftover
-      </mat-checkbox>
-      <mat-checkbox [(ngModel)]="showLargePoints" color="primary"
-        matTooltip="Make points more visible on the chart so you can hover over them" [matTooltipPosition]="'below'"
-        matTooltipShowDelay="700">
-        Large points
-      </mat-checkbox>
-
-
-      <!-- <mat-checkbox [(ngModel)]="darkMode" color="primary"
-        matTooltip="Toggle dark mode" [matTooltipPosition]="'below'"
-        matTooltipShowDelay="700">
-        Dark Mode
-      </mat-checkbox> -->
-
-
-    </div>
-
-
-    <!-- combineAll -->
-
-    <div *ngIf="curErrorMessage !== ''" style="padding-bottom: 10px" class="center">
-      <div class="red"> {{curErrorMessage}} </div>
-    </div>
   </div>
 
-  <div *ngIf="searched" class="chRegion" style="display: block;">
+  <!-- ── Search bar ──────────────────────────────────── -->
+  <div class="search-bar">
 
-    <div class="crstitle" style="font-size: 18px;
-  ">
+    <mat-form-field appearance="outline" class="search-field session-field" *ngIf="getSessions().length >= 2" (keydown)="keyDownFunction($event)">
+      <mat-label>Session</mat-label>
+      <mat-select [(ngModel)]="selectedValue" name="sess">
+        <mat-option *ngFor="let ses of getSessions()" [value]="ses.sessionCode">
+          {{ ses.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <div style="padding-bottom: 5px;">Enrollment over time for </div>
-      <!-- {{previousFullCourseCode}} -->
-      <div class="slight-pad" style="font-size: 22px; font-weight: bold;
-    padding-bottom: 5px;
-    line-height: 1.2;">
-        {{courseTitle}} ({{previousFullCourseCode.replace("-", "")}})</div>
+    <mat-form-field appearance="outline" class="search-field course-field" (keydown)="keyDownFunction($event)">
+      <mat-label>Course code</mat-label>
+      <input matInput type="text" [(ngModel)]="inputCourse" placeholder="e.g. MAT135H1">
+    </mat-form-field>
+
+    <button class="search-btn" type="button" mat-flat-button color="primary"
+      (click)="loadCourseData(inputCourse)">
+      Search
+    </button>
+
+  </div>
+
+  <!-- ── Error ───────────────────────────────────────── -->
+  <div *ngIf="curErrorMessage !== ''" class="error-banner">
+    {{ curErrorMessage }}
+  </div>
+
+  <!-- ── Results ─────────────────────────────────────── -->
+  <div *ngIf="searched" class="results-region">
+
+    <div class="course-title-block">
+      <div class="course-name">{{ courseTitle }}</div>
+      <div class="course-code">{{ previousFullCourseCode.replace("-", "") }}</div>
     </div>
-    <div class="canvas-holder center-me">
-      <canvas baseChart [datasets]="scatterChartData" [options]="scatterChartOptions" [type]="scatterChartType"
+
+    <!-- Chart -->
+    <div class="chart-wrapper">
+      <canvas baseChart
+        [datasets]="scatterChartData"
+        [options]="scatterChartOptions"
+        [type]="scatterChartType"
         [plugins]="chartPlugins">
       </canvas>
     </div>
 
-
-    <div style="padding-top: 25px;" *ngIf="true">
-      <!-- <p class="center4">
-      Enrollment: {{currentEnrollment}}/{{cap}}
-      <br>
-      Final enrollment: {{finalEnrollment}}
-      <br>
-      Drops: {{drops}}
-      <br>
-      LWDs: {{lwds}}
-
-    </p> -->
-
-      <table style="
-    margin-left: auto;
-    margin-right: auto;
-    ">
-        <tr>
-          <td matTooltip="Enrolled and waitlisted students. Students can waitlist multiple lecture sections at once"
-            [matTooltipPosition]="'left'" class="thick-row">
-            {{afterWaitlistDeadline ? "Enrolled" : "Enrolled & Waitlisted"}}
-          </td>
-          <td>
-            {{ currentEnrollment }}/{{cap}}
-          </td>
-        </tr>
-        <!-- *ngIf="finalEnrollment !==  currentEnrollment" -->
-        <tr>
-          <td class="thick-row" matTooltip="Enrollment right after enrollment closes" [matTooltipPosition]="'left'">
-            Cutoff </td>
-          <td> {{finalEnrollment}} ({{fmtNumAsPercent(finalEnrollment / cap)}}) </td>
-        </tr>
-
-        <tr>
-          <td [matTooltipPosition]="'left'" matTooltip="Drops after enrollment deadline including LWDs"
-            [matTooltipPosition]="'left'"> Drops
-          </td>
-          <td> {{drops + lwds}} ({{ fmtNumAsPercent((drops + lwds) / finalEnrollment) }})
-          </td>
-        </tr>
-
-
-        <tr *ngIf="etd !== null && !lastAfterEnrollmentDeadline">
-          <td class="thick-row" matTooltip="Enrollment to date - Enrollment on the red line"
-            [matTooltipPosition]="'left'">
-            ETD </td>
-          <td>
-            {{ etd }} ({{fmtNumAsPercent(etd/cap)}})
-          </td>
-        </tr>
-        <tr *ngIf="etd !== null && lastAfterEnrollmentDeadline">
-          <td class="thick-row" matTooltip="Drops to date - Drops at the point of the red line"
-            [matTooltipPosition]="'left'">
-            DTD </td>
-          <td>
-            {{ finalEnrollment - etd }} ({{fmtNumAsPercent(1-etd/finalEnrollment)}})
-          </td>
-        </tr>
-
-
-        <!-- <tr *ngIf="lwds > 0">
-        <td [matTooltipPosition]="'left'"
-        matTooltip="Drops after enrollment deadline not including LWDs" [matTooltipPosition]="'left'"> Cancels
-        </td>
-        <td>  {{drops}} ({{ fmtNumAsPercent(drops / finalEnrollment) }})
-        </td>
-      </tr> -->
-        <tr>
-          <td matTooltip="Drops after the drop deadline" [matTooltipPosition]="'left'"> LWDs </td>
-          <td> {{lwds}} ({{ fmtNumAsPercent(lwds / finalEnrollment) }}) </td>
-        </tr>
-        <tr *ngIf="isSummer && re75 !== null">
-          <td [matTooltipPosition]="'left'" matTooltip="Drops during the 75% refund period">
-            75 ref
-          </td>
-          <td> {{ re75 }} ({{ fmtNumAsPercent(re75 / finalEnrollment) }}) </td>
-        </tr>
-        <tr *ngIf="isSummer && re50 !== null">
-          <td [matTooltipPosition]="'left'" matTooltip="Drops during the 50% refund period">
-            50 ref
-          </td>
-          <td> {{ re50 }} ({{ fmtNumAsPercent(re50 / finalEnrollment) }}) </td>
-        </tr>
-        <tr *ngIf="isSummer  && re0 !== null">
-          <td [matTooltipPosition]="'left'" matTooltip="Drops during the 0% refund period but before the drop deadline">
-            0 ref
-          </td>
-          <td> {{ re0 }} ({{ fmtNumAsPercent(re0 / finalEnrollment) }}) </td>
-        </tr>
-
-      </table>
+    <!-- Stats cards -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">{{ afterWaitlistDeadline ? "Enrolled" : "Enrolled & Waitlisted" }}</div>
+        <div class="stat-value">{{ currentEnrollment }}<span class="stat-cap">/{{ cap }}</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Cutoff</div>
+        <div class="stat-value">{{ finalEnrollment }}
+          <span class="stat-pct">{{ fmtNumAsPercent(finalEnrollment / cap) }}</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Drops</div>
+        <div class="stat-value">{{ drops + lwds }}
+          <span class="stat-pct">{{ fmtNumAsPercent((drops + lwds) / finalEnrollment) }}</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">LWDs</div>
+        <div class="stat-value">{{ lwds }}
+          <span class="stat-pct">{{ fmtNumAsPercent(lwds / finalEnrollment) }}</span>
+        </div>
+      </div>
+      <div class="stat-card" *ngIf="etd !== null && !lastAfterEnrollmentDeadline">
+        <div class="stat-label">ETD</div>
+        <div class="stat-value">{{ etd }}
+          <span class="stat-pct">{{ fmtNumAsPercent(etd / cap) }}</span>
+        </div>
+      </div>
+      <div class="stat-card" *ngIf="etd !== null && lastAfterEnrollmentDeadline">
+        <div class="stat-label">DTD</div>
+        <div class="stat-value">{{ finalEnrollment - etd }}
+          <span class="stat-pct">{{ fmtNumAsPercent(1 - etd / finalEnrollment) }}</span>
+        </div>
+      </div>
     </div>
 
-    <div class="slight-more-pad" style="padding-top: 10px; max-width: 500px; margin: auto;">
-
-
+    <!-- Accordions -->
+    <div class="accordions-region">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>
-            Instructor changes
-          </mat-panel-title>
-
+          <mat-panel-title>Instructor changes</mat-panel-title>
         </mat-expansion-panel-header>
-        <div>
-          <app-meeting-log-list 
-            [meetings]="(previousCourseInfo?.meetings || [])">
-          </app-meeting-log-list>
-        </div>
+        <app-meeting-log-list [meetings]="(previousCourseInfo?.meetings || [])"></app-meeting-log-list>
       </mat-expansion-panel>
-      <div style="margin-top: 1em">
 
-      </div>
-      <mat-expansion-panel hideToggle>
+      <mat-expansion-panel hideToggle style="margin-top: 8px;">
         <mat-expansion-panel-header>
-          <mat-panel-title>
-            Important Dates
-          </mat-panel-title>
-          <mat-panel-description>
-            {{ getFacultyName(faculty) }}
-          </mat-panel-description>
-
+          <mat-panel-title>Important Dates</mat-panel-title>
+          <mat-panel-description>{{ getFacultyName(faculty) }}</mat-panel-description>
         </mat-expansion-panel-header>
         <app-important-dates [importantDates]="getImportantDatesBasedOnFaculty(faculty)"></app-important-dates>
       </mat-expansion-panel>
-
     </div>
-
-    <div>
-
-
-
-
-
-    </div>
-
-
-
-
 
   </div>
+
 </div>
